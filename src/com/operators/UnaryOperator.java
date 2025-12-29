@@ -24,6 +24,10 @@ public class UnaryOperator {
 		int f = --a;//Pre-decrement
 		System.out.println("a = "+a);
 		System.out.println("f = "+f);
+		
+		boolean isPresent = true;
+		isPresent = !isPresent;
+		System.out.println(isPresent);
 	}
 
 }
