@@ -51,14 +51,28 @@ public class StringIntro {
 //		System.out.println(obj1.hashCode());
 //		System.out.println(obj2.hashCode());
 		
-		String name = "Abdul";
-		String res = name.replace("l","");
-		System.out.println(name);
-		System.out.println(res);
+//		String name = "Abdul";
+//		String res = name.replace("l","");
+//		System.out.println(name);
+//		System.out.println(res);
 		
+		
+		System.out.println(validateGivenStringVal("A++"));
 		
 		
 
 	}
+	
+	static boolean validateGivenStringVal(String name) {
+		boolean digit = false;
+		for (int i=0; i<name.length(); i++) {
+			if (Character.isDigit(name.charAt(i))) {
+				digit = true;
+				break;
+			}
+		}
+		return digit;
+	}
+
 
 }
