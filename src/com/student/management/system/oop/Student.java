@@ -1,36 +1,58 @@
 package com.student.management.system.oop;
 
-public class Student {
-	private String name;
+import java.util.Objects;
+
+public class Student extends Person {
+
 	private int rollNumber;
-	private int age;
 	private double marksObtainedInEnglish;
 	private double marksObtainedInMaths;
 	private double marksObtainedInScience;
 	private String grade;
+	private double percentage;
+	private double totalMarksObtained;
+	private static int totalStudentCount;
 
-	public String getName() {
-		return name;
+	public Student(String name, int rollNumber, int age, double marksObtainedInEnglish, double marksObtainedInMaths,
+			double marksObtainedInScience, String contactNumber, String studentAddress) {
+		super(name, age, contactNumber, studentAddress);
+
+		if (validateAge(age) && validateRollNumber(rollNumber) && validateMarksObtained(marksObtainedInEnglish)
+				&& validateMarksObtained(marksObtainedInMaths) && validateMarksObtained(marksObtainedInScience)) {
+			this.rollNumber = rollNumber;
+			this.marksObtainedInEnglish = marksObtainedInEnglish;
+			this.marksObtainedInMaths = marksObtainedInMaths;
+			this.marksObtainedInScience = marksObtainedInScience;
+			totalMarksObtained = calculateTotalMarks();
+			percentage = calculatePercentage();
+			grade = calculateGrade();
+			totalStudentCount++;
+		}
+	}
+	
+	public int getTotalStudentCount() {
+		return totalStudentCount;
+	}
+	
+	public int getAge() {
+		return age;
 	}
 
-	public void setName(String name) {
-		if (!name.isEmpty() && !validateGivenStringVal(name)) {
-			this.name = name;
+	public void setAge(int age) {
+		if (age >= 4 && age <= 16) {
+			this.age = age;
 		} else {
-			System.out.println("It is an invalid name, Please provide name with only characters");
+			System.err.println("Provide age of range from 4 to 16");
 		}
-
 	}
-
-	private boolean validateGivenStringVal(String name) {
-		boolean digit = false;
-		for (int i = 0; i < name.length(); i++) {
-			if (Character.isDigit(name.charAt(i))) {
-				digit = true;
-				break;
-			}
+	
+	public boolean validateAge(int age) {
+		if (age >= 4 && age <= 16) {
+			return true;
+		} else {
+			System.err.println("Provide age of range from 4 to 16");
+			return false;
 		}
-		return digit;
 	}
 
 	public int getRollNumber() {
@@ -40,16 +62,17 @@ public class Student {
 	public void setRollNumber(int rollNumber) {
 		if (rollNumber > 0) {
 			this.rollNumber = rollNumber;
+		} else {
+			System.err.println("Prove some rollnumber greater than 0 ");
 		}
 	}
 
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		if (age >= 4 && age <= 16) {
-			this.age = age;
+	public boolean validateRollNumber(int rollNumber) {
+		if (rollNumber > 0) {
+			return true;
+		} else {
+			System.err.println("Prove some rollnumber greater than 0 ");
+			return false;
 		}
 	}
 
@@ -60,6 +83,17 @@ public class Student {
 	public void setMarksObtainedInEnglish(double marksObtainedInEnglish) {
 		if (marksObtainedInEnglish >= 0 && marksObtainedInEnglish <= 100) {
 			this.marksObtainedInEnglish = marksObtainedInEnglish;
+		} else {
+			System.err.println("Provide proper marks for English");
+		}
+	}
+
+	public boolean validateMarksObtained(double marksObtained) {
+		if (marksObtained >= 0 && marksObtained <= 100) {
+			return true;
+		} else {
+			System.err.println("Provide proper marks");
+			return false;
 		}
 	}
 
@@ -70,6 +104,8 @@ public class Student {
 	public void setMarksObtainedInMaths(double marksObtainedInMaths) {
 		if (marksObtainedInMaths >= 0 && marksObtainedInMaths <= 100) {
 			this.marksObtainedInMaths = marksObtainedInMaths;
+		} else {
+			System.err.println("Provide proper marks for Maths");
 		}
 	}
 
@@ -80,6 +116,8 @@ public class Student {
 	public void setMarksObtainedInScience(double marksObtainedInScience) {
 		if (marksObtainedInScience >= 0 && marksObtainedInScience <= 100) {
 			this.marksObtainedInScience = marksObtainedInScience;
+		} else {
+			System.err.println("Provide proper marks for Science");
 		}
 	}
 
@@ -87,14 +125,103 @@ public class Student {
 		return grade;
 	}
 
-	public void setGrade(String grade) {
-		if (!grade.isEmpty() && !validateGivenStringVal(grade)) {
-			this.grade = grade;
-		}
+	public double calculateTotalMarks() {
+		return marksObtainedInEnglish + marksObtainedInMaths + marksObtainedInScience;
 	}
 
-	public void calculateTotalMarks() {
-		System.out.println(marksObtainedInEnglish + marksObtainedInMaths + marksObtainedInScience);
+	public double calculatePercentage() {
+		return totalMarksObtained / 3.0;
+	}
+
+	public String calculateGrade() {
+		return GradeCalculator.gradeCalculator(percentage);
+	}
+
+	public double getPercentage() {
+		return percentage;
+	}
+
+	public double getTotalMarksObtained() {
+		return totalMarksObtained;
+	}
+	
+	public boolean updateInformation(String contactNumber, String address) {
+		System.out.println("Requesting parent's approval");
+		if (parentApproval()) {
+			System.out.println("Parents Approved");
+			super.updateInformation(contactNumber, address);
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean parentApproval() {
+		return true;
+	}
+	
+	public boolean updateInformation(String contactNumber) {
+		System.out.println("Requesting parent's approval for contact updates");
+		if (parentApproval()) {
+			System.out.println("Parents Approved for contact updation");
+			super.updateInformation(contactNumber);
+			return true;
+		}
+		return false;
+	}
+
+	public void displayStudentInfo() {
+		System.out.println("-----------Student given details-----------");
+		System.out.println("Name: " + name);
+		System.out.println("Age: " + age);
+		System.out.println("Contact Number: " + contactNumber);
+		System.out.println("Student Address: " + address);
+		System.out.println("RollNumber: " + rollNumber);
+		System.out.println("English marks: " + marksObtainedInEnglish);
+		System.out.println("Maths marks: " + marksObtainedInMaths);
+		System.out.println("Science marks: " + marksObtainedInScience);
+		System.out.println("-----------Student calculated details-----------");
+		System.out.println("totalMarksObtained: " + totalMarksObtained);
+		System.out.println("percentage: " + percentage);
+		System.out.println("grade: " + grade);
+		System.out.println("========End========");
+
+	}
+
+	@Override
+	public String toString() {
+		return "Student [rollNumber=" + rollNumber + ", marksObtainedInEnglish=" + marksObtainedInEnglish
+				+ ", marksObtainedInMaths=" + marksObtainedInMaths + ", marksObtainedInScience="
+				+ marksObtainedInScience + ", grade=" + grade + ", percentage=" + percentage + ", totalMarksObtained="
+				+ totalMarksObtained + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(grade, marksObtainedInEnglish, marksObtainedInMaths,
+				marksObtainedInScience, percentage, rollNumber, totalMarksObtained);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		return Objects.equals(grade, other.grade)
+				&& Double.doubleToLongBits(marksObtainedInEnglish) == Double
+						.doubleToLongBits(other.marksObtainedInEnglish)
+				&& Double.doubleToLongBits(marksObtainedInMaths) == Double.doubleToLongBits(other.marksObtainedInMaths)
+				&& Double.doubleToLongBits(marksObtainedInScience) == Double
+						.doubleToLongBits(other.marksObtainedInScience)
+				&& Double.doubleToLongBits(percentage) == Double.doubleToLongBits(other.percentage)
+				&& rollNumber == other.rollNumber
+				&& Double.doubleToLongBits(totalMarksObtained) == Double.doubleToLongBits(other.totalMarksObtained);
 	}
 
 }
