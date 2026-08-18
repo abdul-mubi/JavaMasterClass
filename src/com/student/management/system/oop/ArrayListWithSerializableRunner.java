@@ -2,6 +2,7 @@ package com.student.management.system.oop;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -95,10 +96,14 @@ public class ArrayListWithSerializableRunner {
 		return studentList;
 	}
 
-	private static void serializeStudent(List<Student2> students, String fileName) {
+	private static void serializeStudent(List<Student2> newStudents, String fileName) {
+		List<Student2> existingStudents = deserializeStudents(fileName);
+		existingStudents.addAll(newStudents);
+		
+		
 		try (FileOutputStream fos = new FileOutputStream(fileName);
 				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-				oos.writeObject(students);
+				oos.writeObject(existingStudents);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -111,9 +116,9 @@ public class ArrayListWithSerializableRunner {
 		try (FileInputStream fis = new FileInputStream(fileName); ObjectInputStream ois = new ObjectInputStream(fis)) {
 			return (List<Student2>) ois.readObject();
 		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+			System.out.println("My be file not found.... Creating new file");
 		}
-		return null;
+		return new ArrayList<Student2>();
 	}
 
 }
